@@ -39,7 +39,8 @@ namespace FirstConsoleApp1
             } while (answer());
         }
 
-        static string operationSelection() {
+        static string operationSelection()
+        {
             Console.Write(
                 "0. Load my contacts;" +
                 "\n1. Add new contact;" +
@@ -50,6 +51,7 @@ namespace FirstConsoleApp1
                 "\n6. Clear \"Phonebook\"" +
                 "\n7. Exit;" +
                 "\n\nSelect operation: ");
+
             return Console.ReadLine();
         }
 
@@ -60,14 +62,14 @@ namespace FirstConsoleApp1
                 Console.Write("\nInput name of contact: ");
                 name = Console.ReadLine();
                 
-            } while (isContactExists(name, null));
+            } while (isContactExists(name, null, true, false));
 
             do
             {
                 Console.Write("Input phone number of contact (+380): ");
                 phone = Console.ReadLine();
 
-            } while (isContactExists(null, phone));
+            } while (isContactExists(null, phone, true, false));
 
 
             if (name == "" || phone == "")
@@ -86,7 +88,7 @@ namespace FirstConsoleApp1
         }
 
         // проверить работу с сообщениями
-        public static bool isContactExists(string name, string phone)
+        public static bool isContactExists(string name, string phone, bool trueMsg, bool falseMsg)
         {
             int counter = 0;
             foreach (KeyValuePair<string, string> kv in book)
@@ -94,12 +96,12 @@ namespace FirstConsoleApp1
                 counter++;
                 if (kv.Key == name || kv.Value == phone)
                 {
-                    Console.WriteLine("This contact already exists!");
+                    if (trueMsg) Console.WriteLine("This contact already exists!");
                     return true;
                 }
                 if (counter == book.Count)
                 {
-                    //Console.WriteLine("No contact found!");
+                    if (falseMsg) Console.WriteLine("No contact found!");
                     return false;
                 }
             }
@@ -111,16 +113,19 @@ namespace FirstConsoleApp1
             Console.Write("\nInput phone number: ");
             phone = Console.ReadLine();
             int counter = 0;
+            int results = 0;
 
             foreach (KeyValuePair<string, string> kv in book)
             {
                 counter++;
                 if (kv.Value.Contains(phone))
                 {
+                    results++;
                     Console.WriteLine(kv);
                     continue;
                 }
-                if (counter == book.Count) return 1;
+                if (counter == book.Count && results > 0) return 1;
+                else if (counter == book.Count && results == 0) break;
             }
 
             Console.WriteLine("Contact not found!");
@@ -165,12 +170,12 @@ namespace FirstConsoleApp1
             Console.Write("Input name or phone: ");
             string info = Console.ReadLine();
 
-            bool exists = isContactExists(info, null);
+            bool exists = isContactExists(info, null, false, true);
 
             if (exists)
             {
                 book.Remove(info);
-                if (!isContactExists(info, null)) Console.WriteLine("Contact successfully deleted.");
+                if (!isContactExists(info, null, false, false)) Console.WriteLine("Contact successfully deleted.");
             }
             else if (!exists) Console.WriteLine("Contact not found!");
         }
