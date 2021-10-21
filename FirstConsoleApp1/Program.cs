@@ -87,7 +87,6 @@ namespace FirstConsoleApp1
             return true;
         }
 
-        // проверить работу с сообщениями
         public static bool isContactExists(string name, string phone, bool trueMsg, bool falseMsg)
         {
             int counter = 0;
@@ -137,16 +136,19 @@ namespace FirstConsoleApp1
             Console.Write("\nInput name of contact: ");
             name = Console.ReadLine();
             int counter = 0;
+            int results = 0;
 
             foreach (KeyValuePair<string, string> kv in book)
             {
                 counter++;
                 if (kv.Key.Contains(name))
                 {
+                    results++;
                     Console.WriteLine(kv);
                     continue;
                 }
-                if (counter == book.Count) return 1;
+                if (counter == book.Count && results > 0) return 1;
+                else if (counter == book.Count && results == 0) break;
             }
 
             Console.WriteLine("Contact not found!");
@@ -164,10 +166,9 @@ namespace FirstConsoleApp1
             foreach (KeyValuePair<string, string> kv in book) Console.WriteLine(kv);
         }
 
-        // проверить работу
         public static void removeContact()
         {
-            Console.Write("Input name or phone: ");
+            Console.Write("Input the exact name, or use the search for more information: ");
             string info = Console.ReadLine();
 
             bool exists = isContactExists(info, null, false, true);
@@ -177,10 +178,8 @@ namespace FirstConsoleApp1
                 book.Remove(info);
                 if (!isContactExists(info, null, false, false)) Console.WriteLine("Contact successfully deleted.");
             }
-            else if (!exists) Console.WriteLine("Contact not found!");
         }
 
-        // проверить работу
         public static void clearBook() {
             Console.Write("Сonfirm phonebook deletion operation (1 - Yes, 0 - no): ");
             if (answer()) book.Clear();
